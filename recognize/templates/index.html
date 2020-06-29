@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+
+
+</head>
+<body>
+    <header>
+        <nav>
+<!--            <ul>-->
+<!--                <li><a href="#">Home</a></li>-->
+<!--                <li><a href="#">Menu</a></li>-->
+<!--                <li class='unusual'><a href="#">Location</a></li>-->
+<!--                <li class='unusual'><a href="#">Contact</a></li>-->
+<!--&lt;!&ndash;                <li><a href="#" class="logo">My Sightseeing</a></li>&ndash;&gt;-->
+<!--                <li class='usual'><a href="#">Recognize</a></li>-->
+<!--                <li class='usual'><a href="#">Location</a></li>-->
+<!--                <li class='usual'><a href="#">Contact</a></li>-->
+<!--            </ul>-->
+        </nav>
+        <h1></h1>
+    </header>
+
+<!--    <section class="features">-->
+<!--        <figure>-->
+<!--            <img src="/static/images/pink_sky.jpeg" alt="chinese beautiful sky">-->
+<!--            <figcaption>pink sky</figcaption>-->
+<!--        </figure>-->
+<!--        <figure>-->
+<!--            <img src="/static/images/blue_sky.jpeg" alt="chinese beautiful sky">-->
+<!--            <figcaption>blue sky</figcaption>-->
+<!--        </figure>-->
+<!--        <figure>-->
+<!--            <img src="/static/images/maple.jpeg" alt="chinese beautiful sky">-->
+<!--            <figcaption>maple</figcaption>-->
+<!--        </figure>-->
+<!--        <figure>-->
+<!--            <img src="/static/images/mountain.jpeg" alt="chinese beautiful sky">-->
+<!--            <figcaption>mountain</figcaption>-->
+<!--        </figure>-->
+<!--        <figure>-->
+<!--            <img src="/static/images/moon.jpeg" alt="chinese beautiful sky">-->
+<!--            <figcaption>moon</figcaption>-->
+<!--        </figure>-->
+<!--    </section>-->
+
+    <main class="mains">
+<!--    <h1>提交留言功能区</h1>-->
+<!--    <form action="/msggate/" method="post">-->
+<!--        {% csrf_token %}-->
+<!--        发送方 <input type="text" name="userA" /> <br>-->
+<!--        接收方 <input type="text" name="userB" /> <br>-->
+<!--        消息文 <input type="text" name="msg" /> <br>-->
+<!--        <input type="submit" value="留言提交" />-->
+<!--    </form>-->
+
+        <div class="blocks">
+            <form method="post" action="/recog/" enctype="multipart/form-data" class="container" id='formBox' name="form">
+                {% csrf_token %}
+                <h1>请上传需要识别的图片</h1><br>
+        <!--        请输入测试执行人：<input type="text" name="people"><br>-->
+        <!--        请输入测试 版本 &nbsp;：<input type="text" name="version"><br>-->
+                <img id="cropedBigImg" value='custom' alt="lorem ipsum dolor sit" data-address='' src="/static/images/maple.jpeg" title="自定义背景"/>
+                
+                <div class="fileupload">
+                    <a href="javascript:;" class="a-upload">
+                        <input type="submit" value="拍照"  name = "app2">拍照
+                    </a>
+                </div>
+                
+                <div class="fileupload">
+                    <a href="javascript:;" class="a-upload">
+                        <input type="file" name="myfile" id="chooseImage">选图
+                    </a>
+                </div>
+                <div class="fileupload">
+                    <a href="javascript:;" class="a-upload">
+                        <input type="submit" value="上传" id="upphoto" name ="up" >上传
+                    </a>
+                </div>
+                <!-- <div class="fileupload" id="picturebtn">
+                    <a href="javascript:;" class="a-upload">
+                        <input type="button" value="click~~~~~~~~~~">回图
+                    </a>
+                </div> -->
+
+                <div class="fileupload">
+                    <a href="javascript:;" class="a-upload">
+                        <input type="submit" value="识别"  name = "app">识别
+                    </a>
+                </div>
+        
+                <div  class="fileupload">
+                    <a href="javascript:;" class="a-upload">
+                        <input type="submit" value="调用视频"  name = "app1">视频
+                    </a>
+                </div>
+
+            </form>
+        </div>
+        <div class="blocks">
+            <form action="/recog/" method="get">
+                <h1>识别结果</h1>
+<!--                接收方 <input type="text" name="userC" /> <br>-->
+
+                <table class="mytable" border="1">
+                    <thead>
+                        <th>识别结果</th>
+                    </thead>
+                    <br>
+                    <tbody>
+                        {% for line in data %}
+                        <tr>
+                            <td align="center">{{ line.result }}</td>
+    <!--                        <td align="center">{{ line.userA }}</td>-->
+    <!--                        <td>{{ line.msg }}</td>-->
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+
+                <div class="fileupload" id="resultbtn">
+                    <a href="javascript:;" class="a-upload">
+                        <input type="submit" value="click~~~~~~~~~~">刷新
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+    <footer>123 Main Street | 无锡 蠡湖大道 1800号 | 555-555-5555 · username.com</footer>
+</body>
+{% load static %}
+<script src="/static/js/jquery-3.4.1.min.js"></script>
+<script>
+	$(function() {
+		$('#chooseImage').on('change',function(){
+	    	var filePath = $(this).val(),         //获取到input的value，里面是文件的路径
+	    		fileFormat = filePath.substring(filePath.lastIndexOf(".")).toLowerCase(),
+	    		src = window.URL.createObjectURL(this.files[0]); //转成可以在本地预览的格式
+
+	    	// 检查是否是图片
+	    	if( !fileFormat.match(/.png|.jpg|.jpeg/) ) {
+	    		error_prompt_alert('上传错误,文件格式必须为：png/jpg/jpeg');
+	        	return;
+	        }
+
+	        $('#cropedBigImg').attr('src',src);
+		});
+
+        // $('#picturebtn').on('click',function(){
+        //     $('#cropedBigImg').attr('src','/temp_file/test.jpg');
+		// })
+	})
+</script>
+
+</html>
